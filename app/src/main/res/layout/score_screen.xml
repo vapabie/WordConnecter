@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#f0f9a0">
+
+    <TextView
+        android:id="@+id/scoretext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name, your\nscore is:"
+        android:textSize="50dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/score"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textSize="60dp"
+        android:text="5"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:background="#65c7a2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoretext"
+        app:layout_constraintBottom_toTopOf="@id/restart"
+        />
+
+    <Button
+        android:id="@+id/restart"
+        android:layout_width="320dp"
+        android:layout_height="70dp"
+        android:text="I want to play again"
+        android:textSize="25dp"
+        android:background="@drawable/round_corner"
+        android:backgroundTint="#6beb3e"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/score"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
