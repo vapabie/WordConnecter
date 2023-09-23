@@ -16,6 +16,5 @@ public class WordPair {
     public String getEnWord() {
         return enWord;
     }
-
-
+    
 }

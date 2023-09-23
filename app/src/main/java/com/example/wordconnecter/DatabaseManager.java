@@ -47,35 +47,42 @@ public class DatabaseManager {
         }
     }
 
-    //Pair:Container to ease passing around a tuple of two objects. This object provides a sensible implementation of equals(), returning true if equals() is true on each of the contained objects
     //getReadableDatabase():Create and/or open a database.
     //Cursor:This interface provides random read-write access to the result set returned by a database query.->need query
     public List<WordPair> shuffleWordPairs(int count){
-        List<WordPair> wordPairs = new ArrayList<>();//ez a lista fogja tárolni a szópárokat
+        List<WordPair> wordPairs = new ArrayList<>();//ez a lista fogja tárolni a szópárokat, legvégére kell
+        List<String> hungarianWords = new ArrayList<>();
+        List<String> englishWords = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();//Ezzel nyitjuk meg az adatbázist olvasásra
         Cursor cursor = db.rawQuery("SELECT * FROM " + dbHelper.TABLE_WORDS + " ORDER BY RANDOM() LIMIT " + count, null);//itt történik a lekérdezés, szerintem érthető, hisz majdnem ugyanaz mint egy adatbázis lekérdezés
 
-        if(cursor!=null && cursor.moveToFirst()){
+
+        if(cursor!=null && cursor.moveToFirst()){//(a rawQuery metódus által visszaadott Cursor objektum valóban létezik && a kurzor tud-e mozogni az eredményhalmazon belül, és ha igen, akkor az első rekordra (sor) helyezzük a kurzort)
         do{
             String hunWord = cursor.getString(cursor.getColumnIndex(dbHelper.COLUMN_HUN));//a magyar szavakat nyerjük ki az adatb.ből
             String enWord = cursor.getString(cursor.getColumnIndex(dbHelper.COLUMN_EN));//az angol szavakat nyerjük ki az adatb.ből
+
             Log.d("RandomWord", "HUN: " + hunWord + ", EN: " + enWord);//ellenőrzésre
 
-            WordPair wordPair = new WordPair(hunWord, enWord);
-            wordPairs.add(wordPair);
+            hungarianWords.add(hunWord);
+            englishWords.add(enWord);
         }while(cursor.moveToNext());//következő sorba lépés az adatbázisban
         cursor.close();
     }
 
-        Log.d("RandomWord", "Szópárok a keverés előtt:");
-        for (WordPair pair : wordPairs) {
-            Log.d("RandomWord", "HUN: " + pair.getHunWord() + ", EN: " + pair.getEnWord());
+        // Most cseréljük meg a szópárokat: Random()-mal kiválasztok egy számot, átrakom azt az indexest a fő arraybe és eredetiből kiveszem. addig csinálom még az erediteben nem marad semmi
+        for (int i = 0; i < count; i++) {
+            int randomIndex = new Random().nextInt(hungarianWords.size());
+            int randomIndex2 = new Random().nextInt(englishWords.size());
+            String shuffledHunWord = hungarianWords.remove(randomIndex);
+            String shuffledEnWord = englishWords.remove(randomIndex2);
+
+            WordPair wordPair = new WordPair(shuffledHunWord, shuffledEnWord);
+            wordPairs.add(wordPair);
         }
 
-        Collections.shuffle(wordPairs);//ezzel fogja összekavarni a szavakat
 
-
-        Log.d("RandomWord", "Szópárok a keverés után:");
+        Log.d("RandomWord", "Szópárok a keverés után:");//csak ellenőrzésre van
         for (WordPair pair : wordPairs) {
             Log.d("RandomWord", "HUN: " + pair.getHunWord() + ", EN: " + pair.getEnWord());
         }
