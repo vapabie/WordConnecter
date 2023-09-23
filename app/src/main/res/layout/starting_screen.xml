@@ -53,6 +53,7 @@
         android:textSize="30dp"
         android:backgroundTint="#6beb3e"
         android:background="@drawable/round_corner"
+        android:onClick="startGameActivity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username"

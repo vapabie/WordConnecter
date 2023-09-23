@@ -2,7 +2,9 @@ package com.example.wordconnecter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,5 +27,10 @@ public class MainActivity extends AppCompatActivity {
             // Adatbázis bezárása
             manager.close();
         }
+    }
+
+    public void startGameActivity (View view){
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
     }
 }
