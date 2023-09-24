@@ -1,72 +1,78 @@
 package com.example.wordconnecter;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.sql.SQLDataException;
-import java.util.List;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class GameActivity extends AppCompatActivity {
-    private DatabaseManager manager;
-    private List<WordPair> wordPairs;
-    private Button[] hunButtons;
-    private Button[] engButtons;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText usernameEdittext;
+    private Button startButton;
 
 
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_screen);
-        //inicalizáljuk a gombokat és a szavakat
-        initButtons();
-        initWordPairs();
-    }
+        setContentView(R.layout.starting_screen);
+        usernameEdittext =findViewById(R.id.username);
+        startButton = findViewById(R.id.start_button);
 
-    public void OpenScore(){
-        String username = getIntent().getStringExtra("username");
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = usernameEdittext.getText().toString();
 
-        Intent intent = new Intent(this, ScoreActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }
+                if(TextUtils.isEmpty(username)){
+                    Toast.makeText(MainActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                }
+            }
+        });
 
-    private void initButtons() {
-        hunButtons = new Button[5];
-        engButtons = new Button[5];
-
-        // Inicializáld a gombokat a layoutban lévő id-k alapján
-        for (int i = 0; i < 5; i++) {// A getResources().getIdentifier() metódussal a gombokat id alapján keressük meg
-            hunButtons[i] = findViewById(getResources().getIdentifier("hun_button" + (i + 1), "id", getPackageName()));
-            engButtons[i] = findViewById(getResources().getIdentifier("eng_button" + (i + 1), "id", getPackageName()));
-        }
-    }
-    //getResources():basically az alkalmazás erőforrásait kezeli
-    //getIdentifier():Ez a metódus segít megtalálni egy erőforrás azonosítóját az erőforrás neve és típusa alapján
-    //getPackageName():Ez a metódus a jelenlegi Android alkalmazás csomagjának nevét adja vissza. Ezt a csomagnevet a harmadik paraméterként használjuk a getIdentifier() metódusban, hogy megtaláljuk az erőforrásokat az aktuális alkalmazásban.
-
-    private void initWordPairs() {//szópárok inicializálása
-        manager = new DatabaseManager(this);
-
-        try {
+        DatabaseManager manager = new DatabaseManager(this);
+        try{
             manager.open();
-            wordPairs = manager.shuffleWordPairs(5); // itt fog az öt szópár kiválasztása és összakavarása történni
-        } catch (SQLDataException e) {
-            e.printStackTrace();
-        } finally {
+            // manager.insert("sajat", "custom");
+            manager.deleteAllWordPairs();
+            insertData(manager);
+            manager.shuffleWordPairs(5);
+        }catch (Exception e){
+            e.getStackTrace();
+        }finally {
+            // Adatbázis bezárása
             manager.close();
         }
+    }
 
-        // A szópárokat állítja be a gombokra
-        for (int i = 0; i < 5; i++) {
-            hunButtons[i].setText(wordPairs.get(i).getHunWord());
-            engButtons[i].setText(wordPairs.get(i).getEnWord());
-        }
+
+
+
+    private void insertData(DatabaseManager manager){
+        manager.insert("keretrendszer","framework");
+        manager.insert("böngésző","browser");
+        manager.insert("képpont","pixel");
+        manager.insert("tűzfal","firewall");
+        manager.insert("gyorsítótár","cache");
+        manager.insert("adat","data");
+        manager.insert("csomópont","node");
+        manager.insert("útválasztó","router");
+        manager.insert("karakterkészlet","font");
+        manager.insert("jelismétlő","repeater");
     }
 
 
 }
-
