@@ -26,6 +26,14 @@ public class GameActivity extends AppCompatActivity {
         initWordPairs();
     }
 
+    public void OpenScore(){
+        String username = getIntent().getStringExtra("username");
+
+        Intent intent = new Intent(this, ScoreActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+    }
+
     private void initButtons() {
         hunButtons = new Button[5];
         engButtons = new Button[5];
