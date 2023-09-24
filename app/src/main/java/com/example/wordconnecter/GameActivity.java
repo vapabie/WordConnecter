@@ -46,10 +46,9 @@ public class GameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFinish() {
-                timerTextView.setText("time is over");
-            }
-        }.start();
+            Intent intent = new Intent(MainActivity.this, ScoreActivity.class);
+            intent.putExtra("score", yourScoreValue); 
+            startActivity(intent);
     }
 
     private void updateTimer(){
