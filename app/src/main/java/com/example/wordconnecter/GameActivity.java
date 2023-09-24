@@ -21,7 +21,7 @@ public class GameActivity extends AppCompatActivity {
     private TextView timerTextView;
 
     private CountDownTimer cdtimer;
-    private long timeLeft = 5000;
+    private long timeLeft = 30000;
     private int score;
 
 
