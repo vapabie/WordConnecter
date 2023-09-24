@@ -21,7 +21,8 @@ public class GameActivity extends AppCompatActivity {
     private TextView timerTextView;
 
     private CountDownTimer cdtimer;
-     private long timeLeft = 30000;
+    private long timeLeft = 5000;
+    private int score;
 
 
     @Override
@@ -37,64 +38,63 @@ public class GameActivity extends AppCompatActivity {
         startCountdown();
     }
 
-    private void startCountdown(){
+    private void startCountdown() {
         cdtimer = new CountDownTimer(timeLeft, 1000) {
             @Override
-            public void onTick(long left ) {
+            public void onTick(long left) {
                 timeLeft = left;
                 updateTimer();
             }
 
             @Override
-            Intent intent = new Intent(MainActivity.this, ScoreActivity.class);
-            intent.putExtra("score", yourScoreValue); 
-            startActivity(intent);
+            public void onFinish() {
+                String username = getIntent().getStringExtra("username");
+                Intent intent = new Intent(GameActivity.this, ScoreActivity.class);
+                intent.putExtra("score", score);
+                intent.putExtra("username", username);
+
+                startActivity(intent);
+            }
+        }.start();
     }
 
-    private void updateTimer(){
-        int seconds = (int) (timeLeft / 1000);
-        timerTextView.setText(Integer.toString(seconds) + " másodperc");
-    }
-
-    public void OpenScore(){
-        String username = getIntent().getStringExtra("username");
-
-        Intent intent = new Intent(this, ScoreActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }
-
-    private void initButtons() {
-        hunButtons = new Button[5];
-        engButtons = new Button[5];
-
-        // Inicializáld a gombokat a layoutban lévő id-k alapján
-        for (int i = 0; i < 5; i++) {// A getResources().getIdentifier() metódussal a gombokat id alapján keressük meg
-            hunButtons[i] = findViewById(getResources().getIdentifier("hun_button" + (i + 1), "id", getPackageName()));
-            engButtons[i] = findViewById(getResources().getIdentifier("eng_button" + (i + 1), "id", getPackageName()));
-        }
-    }
-    //getResources():basically az alkalmazás erőforrásait kezeli
-    //getIdentifier():Ez a metódus segít megtalálni egy erőforrás azonosítóját az erőforrás neve és típusa alapján
-    //getPackageName():Ez a metódus a jelenlegi Android alkalmazás csomagjának nevét adja vissza. Ezt a csomagnevet a harmadik paraméterként használjuk a getIdentifier() metódusban, hogy megtaláljuk az erőforrásokat az aktuális alkalmazásban.
-
-    private void initWordPairs() {//szópárok inicializálása
-        manager = new DatabaseManager(this);
-
-        try {
-            manager.open();
-            wordPairs = manager.shuffleWordPairs(5); // itt fog az öt szópár kiválasztása és összakavarása történni
-        } catch (SQLDataException e) {
-            e.printStackTrace();
-        } finally {
-            manager.close();
+        private void updateTimer () {
+            int seconds = (int) (timeLeft / 1000);
+            timerTextView.setText(Integer.toString(seconds));
         }
 
-        // A szópárokat állítja be a gombokra
-        for (int i = 0; i < 5; i++) {
-            hunButtons[i].setText(wordPairs.get(i).getHunWord());
-            engButtons[i].setText(wordPairs.get(i).getEnWord());
-        }
-    }
+        private void initButtons () {
+            hunButtons = new Button[5];
+            engButtons = new Button[5];
 
+            // Inicializáld a gombokat a layoutban lévő id-k alapján
+            for (int i = 0; i < 5; i++) {// A getResources().getIdentifier() metódussal a gombokat id alapján keressük meg
+                hunButtons[i] = findViewById(getResources().getIdentifier("hun_button" + (i + 1), "id", getPackageName()));
+                engButtons[i] = findViewById(getResources().getIdentifier("eng_button" + (i + 1), "id", getPackageName()));
+            }
+        }
+        //getResources():basically az alkalmazás erőforrásait kezeli
+        //getIdentifier():Ez a metódus segít megtalálni egy erőforrás azonosítóját az erőforrás neve és típusa alapján
+        //getPackageName():Ez a metódus a jelenlegi Android alkalmazás csomagjának nevét adja vissza. Ezt a csomagnevet a harmadik paraméterként használjuk a getIdentifier() metódusban, hogy megtaláljuk az erőforrásokat az aktuális alkalmazásban.
+
+        private void initWordPairs () {//szópárok inicializálása
+            manager = new DatabaseManager(this);
+
+            try {
+                manager.open();
+                wordPairs = manager.shuffleWordPairs(5); // itt fog az öt szópár kiválasztása és összakavarása történni
+            } catch (SQLDataException e) {
+                e.printStackTrace();
+            } finally {
+                manager.close();
+            }
+
+            // A szópárokat állítja be a gombokra
+            for (int i = 0; i < 5; i++) {
+                hunButtons[i].setText(wordPairs.get(i).getHunWord());
+                engButtons[i].setText(wordPairs.get(i).getEnWord());
+
+            }
+
+        }
 }
