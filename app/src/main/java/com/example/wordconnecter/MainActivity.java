@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    intent.putExtra("username", username);
                     startActivity(intent);
                 }
             }
