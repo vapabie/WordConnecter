@@ -67,16 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void insertData(DatabaseManager manager){
-        manager.insert("magyar1","angol1");
-        manager.insert("magyar2","angol2");
-        manager.insert("magyar3","angol3");
-        manager.insert("magyar4","angol4");
-        manager.insert("magyar5","angol5");
-        manager.insert("magyar6","angol6");
-        manager.insert("magyar7","angol7");
-        manager.insert("magyar8","angol8");
-        manager.insert("magyar9","angol9");
-        manager.insert("magyar10","angol10");
+        manager.insert("keretrendszer","framework");
+        manager.insert("böngésző","browser");
+        manager.insert("képpont","pixel");
+        manager.insert("tűzfal","firewall");
+        manager.insert("gyorsítótár","cache");
+        manager.insert("adat","data");
+        manager.insert("csomópont","node");
+        manager.insert("útválasztó","router");
+        manager.insert("karakterkészlet","font");
+        manager.insert("jelismétlő","repeater");
     }
 
 
